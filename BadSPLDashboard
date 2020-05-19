@@ -1,0 +1,130 @@
+<dashboard>
+  <label>BadSPL</label>
+  <row>
+    <panel>
+      <title>https://docs.splunk.com/Documentation/Splunk/8.0.3/Search/Built-inoptimization</title>
+      <table>
+        <title>Filter first!</title>
+        <search>
+          <query>index=oidemo | search mem &gt; 10 AND sourcetype="vmstat2"</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>Simple list of top users who failed logins on MSSql_1 (Needs Fix)</title>
+      <table>
+        <title>Top users who failed logins on MSSql_1</title>
+        <search>
+          <query>mssql_1 failure | table user</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+    <panel>
+      <title>Count of failed logins for admins not admin2. (Needs Fix)</title>
+      <table>
+        <title>Count of failed logins for each admin</title>
+        <search>
+          <query>*adm* *fail* NOT admin2 | count user</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <table>
+        <title>Use Filtering commands</title>
+        <search>
+          <query>index=oidemo host="mysql-02"
+| table loadAvg1mi, mem, mem_free
+| head 10000
+| table loadAvg1mi, mem, mem_free</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>mysq-02 count (Bad search)</title>
+      <table>
+        <search>
+          <query>index=oidemo
+| stats count by host
+| search host="mysql-02"</query>
+          <earliest>-60m@m</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="count">20</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="percentagesRow">false</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+      </table>
+    </panel>
+    <panel>
+      <title>mysql-02 count</title>
+      <table>
+        <search>
+          <query>index=oidemo host="mysql-02"
+| stats count by host</query>
+          <earliest>-60m@m</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+        </search>
+        <option name="count">20</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="percentagesRow">false</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>https://www.splunk.com/en_us/blog/tips-and-tricks/book-excerpt-when-to-use-transaction-and-when-to-use-stats.html</title>
+      <table>
+        <title>Stats VS Transaction</title>
+        <search>
+          <query>index=oidemo sourcetype=access_combined
+| stats range(_time) as duration by JSESSIONID
+| chart count by duration</query>
+          <earliest>-60m@m</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </table>
+    </panel>
+    <panel>
+      <table>
+        <title>Transaction VS Stats</title>
+        <search>
+          <query>index=oidemo sourcetype=access_combined
+| transaction JSESSIONID
+| chart count by duration</query>
+          <earliest>-60m@m</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+</dashboard>
